@@ -7,6 +7,39 @@
 	$semesterduration = $semesterbegin->diff($semesterend);
 	$semesterdurationdays = $semesterduration->format("%r%a");
 	$semesterdurhtml = "\n <p> 2021 kevadsemestri kestus on " .$semesterdurationdays ." päeva.</p>";
+	$today = new DateTime("now");
+	$fromsemesterbegin = $semesterbegin->diff($today);
+	$fromsemesterbegindays = $fromsemesterbegin->format("%r%a");
+	$semesterprogress = "\n" .'<p>Semester edeneb: <meter min="0" max="' .$semesterdurationdays .'" value="' .$fromsemesterbegindays .'"></meter>.</p>' ."\n";
+
+	if($fromsemesterbegindays <= $semesterdurationdays) {
+		$semesterprogress = "\n" .'<p>Semester edeneb: <meter min="0" max="' .$semesterdurationdays .'" value="' .$fromsemesterbegindays .'"></meter>.</p>' ."\n";	
+	}
+	else {
+		$semesterprogress = "\n <p>Semester on lõppenud.</p> \n";
+	}
+	
+	//loeme piltide kataloogi sisu
+	$picsdir = "../pics/";
+	$allfiles = array_slice(scandir($picsdir), 2);
+	//echo $allfiles[5];
+	$allowedphototypes = ["image/jpeg", "image/png"];
+	$picfiles = [];
+	
+	foreach($allfiles as $file) {
+			$fileinfo = getimagesize($picsdir .$file);
+			//var_dump($fileinfo);
+			if(isset($fileinfo["mime"])) {
+				if(in_array($fileinfo["mime"], $allowedphototypes)) {
+					array_push($picfiles, $file);
+				}
+			}
+	}
+	
+	$photocount = count($picfiles);
+	$photonum = mt_rand(0, $photocount-1);
+	$randomphoto = $picfiles[$photonum];
+	
 ?>
 
 <!DOCTYPE html>
@@ -25,6 +58,9 @@
 	<?php
 		echo $timehtml;
 		echo $semesterdurhtml;
+		echo $semesterprogress;
 	?>
+	<img src="<?php echo $picsdir .$randomphoto; ?>" alt="vaade Haapsalus">
+	<!-- ../pics/IMG_0177.JPG" alt="vaade Haapsalus"> -->
 </body>
 </html>
