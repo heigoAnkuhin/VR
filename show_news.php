@@ -1,8 +1,14 @@
 <?php
 	
 	require_once "../../../conf.php";
-	
+		
 	function read_news(){
+		if(isset($_POST["count_submit"])) { // kui kasutaja on valinud uudiste arvu, mida kuvada soovib
+		$newsCount = $_POST['newsCount']; // kuvatavate uudiste arv sisendist
+		}
+		else { // kui kasutaja pole uudiste arvu valinud
+			$newsCount = 3; // kuvatavate uudiste arv vaikimisi
+		}
 		//echo $news_title .$news_content .$news_author;
 		//echo $GLOBALS["server_host"];
 		//loome andmebaasis serveriga ja baasiga ühenduse
@@ -12,8 +18,6 @@
 		//valmistan ette SQL käsu
 		$stmt = $conn -> prepare("SELECT vr21_news_news_title, vr21_news_news_content, vr21_news_news_author, vr21_news_added FROM vr21_news ORDER BY vr21_news_id DESC LIMIT ?");
 		echo $conn -> error;
-		$newsCount = 3; // vaikimisi kuvatavate uudiste arv
-		$newsCount = $_POST['newsCount']; // kuvatavate uudiste arv sisendist
 		//i - integer   s - string   d - decimal
 		$stmt -> bind_result($news_title_from_db, $news_content_from_db, $news_author_from_db, $news_date_from_db);
 		$stmt -> bind_param("s", $newsCount); // edastame uudiste arvu SQL-käsule
