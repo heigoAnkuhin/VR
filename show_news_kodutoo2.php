@@ -1,9 +1,8 @@
 <?php
-	require_once("usesession.php");
+	
 	require_once "../../../conf.php";
 		
-	function read_news() {
-		$photo_folder = "../upload_photos_news/";
+	function read_news(){
 		if(isset($_POST["count_submit"])) { // kui kasutaja on valinud uudiste arvu, mida kuvada soovib
 		$newsCount = $_POST['newsCount']; // kuvatavate uudiste arv sisendist
 		}
@@ -17,10 +16,10 @@
 		//määrame suhtluseks kodeeringu
 		$conn -> set_charset("utf8");
 		//valmistan ette SQL käsu
-		$stmt = $conn -> prepare("SELECT vr21_news_photo_id, vr21_news_news_title, vr21_news_news_content, vr21_news_news_author, vr21_news_added, vr21_news_photo.photo_name, vr21_news_photo.photo_alt_text FROM vr21_news LEFT JOIN vr21_news_photo ON vr21_news.vr21_news_photo_id = vr21_news_photo.photo_id ORDER BY vr21_news_id DESC LIMIT ?");
+		$stmt = $conn -> prepare("SELECT vr21_news_news_title, vr21_news_news_content, vr21_news_news_author, vr21_news_added FROM vr21_news ORDER BY vr21_news_id DESC LIMIT ?");
 		echo $conn -> error;
 		//i - integer   s - string   d - decimal
-		$stmt -> bind_result($news_photo_id_from_db, $news_title_from_db, $news_content_from_db, $news_author_from_db, $news_date_from_db, $news_photo_name_from_db, $news_photo_alttext_from_db);
+		$stmt -> bind_result($news_title_from_db, $news_content_from_db, $news_author_from_db, $news_date_from_db);
 		$stmt -> bind_param("s", $newsCount); // edastame uudiste arvu SQL-käsule
 		$stmt -> execute();
 		$raw_news_html = null;
@@ -38,9 +37,6 @@
 				$raw_news_html .= "Tundmatu reporter";
 			}
 			$raw_news_html .= "</p>";
-			if($news_photo_id_from_db != 0) {
-			$raw_news_html .= "\n <img src=" .$photo_folder .$news_photo_name_from_db ." alt=" .$news_photo_alttext_from_db ."width='100' height='100'" .">";
-			}
 		}
 		$stmt -> close();
 		$conn -> close();
@@ -59,9 +55,6 @@
 <body>
 	<h1>Uudiste lugemine</h1>
 	<p>See leht on valminud õppetöö raames!</p>
-	<hr>
-	<p><a href="?logout=1">Logi välja</a></p>
-	<p><a href="home.php">Avalehele</a></p>
 	<hr>
 	<form method="POST"> <!-- Vorm kuvatavate uudiste arvu määramiseks -->
 	<input type="number" min="1" max="10" value="3" name="newsCount">

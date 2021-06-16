@@ -1,0 +1,10 @@
+.wrapper:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.photos {
+    float: left;
+    width: 33%;
+}

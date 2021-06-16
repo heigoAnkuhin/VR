@@ -17,10 +17,10 @@
 		//määrame suhtluseks kodeeringu
 		$conn -> set_charset("utf8");
 		//valmistan ette SQL käsu
-		$stmt = $conn -> prepare("SELECT vr21_news_photo_id, vr21_news_news_title, vr21_news_news_content, vr21_news_news_author, vr21_news_added, vr21_news_photo.photo_name, vr21_news_photo.photo_alt_text FROM vr21_news LEFT JOIN vr21_news_photo ON vr21_news.vr21_news_photo_id = vr21_news_photo.photo_id ORDER BY vr21_news_id DESC LIMIT ?");
+		$stmt = $conn -> prepare("SELECT vr21_news_photo_id, vr21_news_id, vr21_news_news_title, vr21_news_news_content, vr21_news_news_author, vr21_news_added, vr21_news_photo.photo_name, vr21_news_photo.photo_alt_text FROM vr21_news LEFT JOIN vr21_news_photo ON vr21_news.vr21_news_photo_id = vr21_news_photo.photo_id ORDER BY vr21_news_id DESC LIMIT ?");
 		echo $conn -> error;
 		//i - integer   s - string   d - decimal
-		$stmt -> bind_result($news_photo_id_from_db, $news_title_from_db, $news_content_from_db, $news_author_from_db, $news_date_from_db, $news_photo_name_from_db, $news_photo_alttext_from_db);
+		$stmt -> bind_result($news_photo_id_from_db, $news_id_from_db, $news_title_from_db, $news_content_from_db, $news_author_from_db, $news_date_from_db, $news_photo_name_from_db, $news_photo_alttext_from_db);
 		$stmt -> bind_param("s", $newsCount); // edastame uudiste arvu SQL-käsule
 		$stmt -> execute();
 		$raw_news_html = null;
@@ -41,6 +41,7 @@
 			if($news_photo_id_from_db != 0) {
 			$raw_news_html .= "\n <img src=" .$photo_folder .$news_photo_name_from_db ." alt=" .$news_photo_alttext_from_db ."width='100' height='100'" .">";
 			}
+			$raw_news_html .= "<p> \n <a href='edit_news.php?news_id=" .$news_id_from_db ."'>Muuda uudist</a> </p>";
 		}
 		$stmt -> close();
 		$conn -> close();

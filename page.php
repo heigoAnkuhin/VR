@@ -1,4 +1,18 @@
 <?php
+	//session_start();
+	require_once "classes/SessionManager.class.php";
+	SessionManager::sessionStart("vr", 0, "/~heigo.ankuhin/", "tigu.hk.tlu.ee");
+	
+	require_once "../../../conf.php";
+	//require_once("fnc_general.php");
+	require_once "fnc_user.php";
+
+	//Klassi näide:
+	require_once "classes/Test.class.php";
+	$test_object = new Test(5);
+	echo $test_object -> non_secret;
+	$test_object -> reveal();
+	
 	$myname = "Heigo Ankuhin";
 	$currenttime = date("d.m.Y H:i:s");
 	$semesterbegin = new DateTime("2021-1-25");
@@ -56,6 +70,20 @@
 	$randomphoto = $picfiles[$photonums[0]];
 	$randomphoto2 = $picfiles[$photonums[1]];
 	$randomphoto3 = $picfiles[$photonums[2]];	
+	
+	//sisselogimine
+	$notice = null;
+	$email = null;
+	$email_error = null;
+	$password_error = null;
+	if(isset($_POST["login_submit"])) {
+		// kontrollime, kas email ja password põhimõtteliselt olemas
+		$notice = sign_in($_POST["email_input"], $_POST["password_input"]);
+		if($notice == 2) {
+			$notice = "Sisselogimine ebaõnnestus. Vigane salasõna või kasutajatunnus";
+		}
+	}
+	
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +99,20 @@
 	?>
 	</h1>
 	<p>See leht on valminud õppetöö raames!</p>
+	<hr>
+	<h2>Logi sisse</h2>
+	<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+		<label>E-mail (kasutajatunnus):</label><br>
+		<input type="email" name="email_input" value="<?php echo $email; ?>"><span><?php echo $email_error; ?></span><br>
+		<label>Salasõna:</label><br>
+		<input name="password_input" type="password"><span><?php echo $password_error; ?></span><br>
+		<input name="login_submit" type="submit" value="Logi sisse!"><span><?php echo $notice; ?></span>
+	</form>
+	<p>Loo endale <a href="add_user.php">kasutajakonto!</a></p>
+	<hr>
+	<ul>
+		<li><p><a href="show_photos_public.php">Piltide galerii</a></p></li>
+	</ul>
 	<?php
 		echo $timehtml;
 		echo $semesterdurhtml;
@@ -82,4 +124,10 @@
 
 	<!-- ../pics/IMG_0177.JPG" alt="vaade Haapsalus"> -->
 </body>
+
+  <!-- CSS -->
+  <style>
+	span { color: red; }
+  </style>
+
 </html>
