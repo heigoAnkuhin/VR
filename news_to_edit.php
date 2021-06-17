@@ -1,4 +1,5 @@
 <?php
+	// LEHT UUDISTE KUVAMISEKS KOOS "MUUDA" NUPUGA
 	require_once("usesession.php");
 	require_once "../../../conf.php";
 		
@@ -10,9 +11,7 @@
 		else { // kui kasutaja pole uudiste arvu valinud
 			$newsCount = 3; // kuvatavate uudiste arv vaikimisi
 		}
-		//echo $news_title .$news_content .$news_author;
-		//echo $GLOBALS["server_host"];
-		//loome andmebaasis serveriga ja baasiga ühenduse
+
 		$conn = new mysqli($GLOBALS["server_host"], $GLOBALS["server_user_name"], $GLOBALS["server_password"], $GLOBALS["database"]);
 		//määrame suhtluseks kodeeringu
 		$conn -> set_charset("utf8");
@@ -38,9 +37,12 @@
 				$raw_news_html .= "Tundmatu reporter";
 			}
 			$raw_news_html .= "</p>";
+			// Kontroll, kas uudisel on ka pilt
 			if($news_photo_id_from_db != 0) {
-			$raw_news_html .= "\n <img src=" .$photo_folder .$news_photo_name_from_db ." alt=" .$news_photo_alttext_from_db ."width='100' height='100'" .">";
+				// Kui on pilt, siis näitame seda ka
+				$raw_news_html .= "\n <img src=" .$photo_folder .$news_photo_name_from_db ." alt=" .$news_photo_alttext_from_db ."width='100' height='100'" .">";
 			}
+			// Uudise muutmise html ehk suunamine edit_news.php lehele
 			$raw_news_html .= "<p> \n <a href='edit_news.php?news_id=" .$news_id_from_db ."'>Muuda uudist</a> </p>";
 		}
 		$stmt -> close();

@@ -18,9 +18,6 @@ $alt_text = null;
 $watermark = "../images/vr_watermark.png";
 
 if (isset($_POST["photo_submit"])) {
-	//var_dump($_POST);
-	//var_dump($_FILES);
-
 
 	//Võtame kasutusele Upload_photo klassi
 	$photo_upload = new Upload_photo($_FILES["file_input"], $file_size_limit);

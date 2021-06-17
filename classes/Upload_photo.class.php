@@ -11,7 +11,7 @@ class Upload_photo
 	public $upload_error;
 	public $file_name;
 
-
+	// funktsioon, mis käivitub klassi loomisel
 	function __construct($photo_to_upload, $size_limit)
 	{
 		$this->photo_to_upload = $photo_to_upload;
@@ -21,7 +21,7 @@ class Upload_photo
 		$this->temp_image = $this->create_image_from_file($this->photo_to_upload["tmp_name"], $this->image_file_type);
 
 	}
-
+	// funktsioon, mis käivitub kui klassi kasutav skript lõppeb
 	function __destruct()
 	{
 		if (isset($this->new_temp_image)) {
@@ -31,7 +31,7 @@ class Upload_photo
 			imagedestroy($this->temp_image);
 		}
 	}
-
+	// Funktsioon pildi loomiseks üleslaetud failist
 	private function create_image_from_file($image, $file_type)
 	{
 		$temp_image = null;
@@ -44,7 +44,7 @@ class Upload_photo
 		}
 		return $temp_image;
 	}
-
+	// Funktsioon pildi suuruse muutmiseks
 	public function resize_photo($w, $h, $keep_orig_proportion = true)
 	{
 		$image_w = imagesx($this->temp_image);
@@ -88,7 +88,7 @@ class Upload_photo
 		imagefill($this->new_temp_image, 0, 0, $trans_color);
 		imagecopyresampled($this->new_temp_image, $this->temp_image, 0, 0, $cut_x, $cut_y, $new_w, $new_h, $cut_size_w, $cut_size_h);
 	}
-
+	// Funktsioon pildi salvestamiseks uude faili
 	public function save_image_to_file($target)
 	{
 		$notice = null;
@@ -109,7 +109,7 @@ class Upload_photo
 		imagedestroy($this->new_temp_image);
 		return $notice;
 	}
-
+	// Funktsioon pildile vesimärgi lisamiseks
 	public function add_watermark($watermark)
 	{
 		$watermark_file_type = strtolower(pathinfo($watermark, PATHINFO_EXTENSION));
@@ -121,7 +121,7 @@ class Upload_photo
 		imagecopy($this->new_temp_image, $watermark_image, $watermark_x, $watermark_y, 0, 0, $watermark_w, $watermark_h);
 		imagedestroy($watermark_image);
 	}
-
+	// Funktsioon üleslaetud faili/pildi parameetrite kontrollimiseks
 	public function test_photo($img, $limit)
 	{
 		// ega pole liiga suur fail
@@ -144,13 +144,13 @@ class Upload_photo
 		}
 		return $this->upload_error;
 	}
-
+	// Funktsioon pildile uue nime genereerimiseks
 	public function generate_name($prefix, $timestamp) { // failile nime genereerimise funktsioon
 		$this->file_name = $prefix . $timestamp . "." . $this->image_file_type;
 		return $this->file_name;
 	}
-
-	public function save_original($target) { // originaalpildi talletamine
+	// Funktsioon originaalpildi säilitamiseks
+	public function save_original($target) {
 		if(!move_uploaded_file($this->photo_to_upload["tmp_name"], $target)){
 			$this->upload_error .= " Originaalfoto üleslaadimine ebaõnnestus!";
 		}

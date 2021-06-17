@@ -38,8 +38,10 @@
 				$raw_news_html .= "Tundmatu reporter";
 			}
 			$raw_news_html .= "</p>";
+			// Kontroll, kas uudisel on ka pilt
 			if($news_photo_id_from_db != 0) {
-			$raw_news_html .= "\n <img src=" .$photo_folder .$news_photo_name_from_db ." alt=" .$news_photo_alttext_from_db ."width='100' height='100'" .">";
+				// Kui on pilt, siis näitame seda ka
+				$raw_news_html .= "\n <img src=" .$photo_folder .$news_photo_name_from_db ." alt=" .$news_photo_alttext_from_db ."width='100' height='100'" .">";
 			}
 		}
 		$stmt -> close();

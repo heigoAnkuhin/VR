@@ -132,5 +132,5 @@
             $photo_id = $conn->insert_id;
             $stmt -> close();
             $conn -> close();
-            return $photo_id;
+            return $photo_id; // tagastab funktsioonist pildi id
         }   

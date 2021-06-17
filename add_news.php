@@ -16,10 +16,11 @@
 
 
 
-	if(isset($_POST["news_submit"])){
-		if(empty($_POST["news_title_input"])){
+	if(isset($_POST["news_submit"])){ // kui vajutatakse uudise salvestamise nuppu:
+		// erinevad  täidetud väljade kontrollid, et kas on tühi
+		if(empty($_POST["news_title_input"])){ // kui on tühi, siis väljastab vastava teate
 			$news_input_error = "Uudise pealkiri on puudu! ";
-		} else {
+		} else { // kui ei ole tühi, siis kasutab test_input funktsiooni sisendi kontrolliks ja korrastamiseks.
 			$news_title = test_input($_POST["news_title_input"]);
 		}
 		if(empty($_POST["news_content_input"])){
@@ -37,22 +38,20 @@
 				$photo_upload = new Upload_photo($_FILES["file_input"], $file_size_limit);
 				$image_file_name = $photo_upload->generate_name($file_name_prefix, $timestamp);
 				$target_file = "../upload_photos_news/" .$image_file_name;
-				if(empty($photo_upload->upload_error)) {
+				if(empty($photo_upload->upload_error)) { // kui pildiklassi toimetustel pole vigu tekkinud
 					$photo_upload->resize_photo($image_max_w, $image_max_h);			
 					$result = $photo_upload->save_image_to_file($target_file);
-					echo $photo_upload->upload_error;
-					//salvestame andmebaasi
+					echo $photo_upload->upload_error; // veateadete väljastus kontrolliks
+					//salvestame andmebaasi uudise foto
 					$news_photo_result = store_news_photo($_SESSION["user_id"], $image_file_name, $_POST["alt_text"]);
 				}
 			}
+			// salvestame andmebaasi uudise enda
 			store_news($news_title, $news_content, $news_author, $news_photo_result);
 		}
 	}
 	
 	function store_news($news_title, $news_content, $news_author, $photo_id){
-		//echo $news_title .$news_content .$news_author;
-		//echo $GLOBALS["server_host"];
-		//loome andmebaasis serveriga ja baasiga ühenduse
 		$conn = new mysqli($GLOBALS["server_host"], $GLOBALS["server_user_name"], $GLOBALS["server_password"], $GLOBALS["database"]);
 		//määrame suhtluseks kodeeringu
 		$conn -> set_charset("utf8");

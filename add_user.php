@@ -126,7 +126,7 @@
 		}
 	 }
 				
-  } //kui on nuppu vajutatud
+  }
   
   
 ?>
